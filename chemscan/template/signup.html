@@ -1,0 +1,68 @@
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i">
+    <link rel="stylesheet" href="{% static 'styles/main.css' %}">
+</head>
+<body>
+    <div class="main-w3layouts wrapper">
+        <h1>Sign Up</h1>
+        <form method="post">
+            {% csrf_token %}
+
+            <!-- Full Name -->
+            <div>
+                <label for="id_full_name">Full Name:</label>
+                {{ form.full_name}}
+                {{ form.full_name.errors }}
+            </div>
+
+            <!-- Email -->
+            <div>
+                <label for="id_email">Email:</label>
+                {{ form.email }}
+                {{ form.email.errors }}
+            </div>
+
+            <!-- Age -->
+            <div>
+                <label for="id_age">Age:</label>
+                {{ form.age }}
+                {{ form.age.errors }}
+            </div>
+
+            <!-- Password -->
+            <div class="password-container">
+                <label for="id_password1">Password:</label>
+                {{ form.password1 }}
+                {{ form.password1.errors }}
+                <i class="eye-icon" onclick="togglePasswordVisibility('id_password1')">👁️</i>
+            </div>
+
+            <!-- Confirm Password -->
+            <div class="password-container">
+                <label for="id_password2">Confirm Password:</label>
+                {{ form.password2 }}
+                {{ form.password2.errors }}
+                <i class="eye-icon" onclick="togglePasswordVisibility('id_password2')">👁️</i>
+            </div>
+
+            <div class="wthree-text">
+                <label class="anim">
+                    <input type="checkbox" class="checkbox" required>
+                    <span>I Agree To The Terms & Conditions</span>
+                </label>
+                <div class="clear"> </div>
+            </div>
+            <input type="submit" value="SIGNUP">
+        </form>
+        <p>Already have an account? <a href="{% url 'login' %}">Login Now!</a></p>
+    </div>
+
+    <script src="{% static 'script/main.js' %}"></script>
+
+</body>
+</html>

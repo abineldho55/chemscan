@@ -1,0 +1,191 @@
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Scanner</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700">
+
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: url("{% static 'images/scanning-background.jpg' %}") no-repeat center center fixed;
+            background-size: cover; /* Ensures the background covers the full page */
+            text-align: center;
+            padding: 20px;
+            color: #333;
+            margin: 0;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            font-weight: 700;
+            color: black; /* Makes the heading stand out */
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3); /* Adds a subtle shadow for clarity */
+        }
+
+        #barcode-form {
+            margin-bottom: 30px;
+            background-color: rgba(255, 255, 255, 0.9); /* Transparent white box for better visibility */
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add shadow for better visual */
+            display: inline-block;
+        }
+
+        #barcode-form input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            font-size: 1em;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            margin-top: 10px;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        #barcode-form button {
+            background-color: #28a745;
+            color: white;
+            padding: 12px 30px;
+            font-size: 1.2em;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease;
+        }
+
+        #barcode-form button:hover {
+            background-color: #218838;
+        }
+
+        #scanner-container {
+            max-width: 700px;
+            max-height:900px;
+            margin: 20px auto;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Make the scanner container stand out */
+        }
+
+        #scanner {
+            width: 100%;
+            height: 500px;
+            border: 3px solid #ddd;
+            border-radius: 10px;
+            background-color: #f5f5f5;
+            position: relative;
+        }
+
+        .alert {
+            color: red;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+
+        @media (max-width: 768px) {
+            #barcode-form input[type="text"] {
+                width: 90%;
+            }
+
+            #scanner-container {
+                max-width: 90%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 2em;
+            }
+
+            #barcode-form input[type="text"] {
+                width: 100%;
+            }
+
+            #barcode-form button {
+                width: 100%;
+                padding: 12px;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <h1>Scan Product Barcode</h1>
+
+    <form method="post" id="barcode-form">
+        {% csrf_token %}
+        <div>
+            {{ form.barcode.label }}<br>
+            {{ form.barcode }}<br>
+            <button type="submit">Submit</button>
+        </div>
+    </form>
+
+    <div id="scanner-container">
+        <div id="scanner"></div>
+        <p id="alert-message" class="alert"></p>
+    </div>
+
+    <script>
+        let alertTimeout;
+
+        // Initialize Quagga with settings for barcode detection
+        Quagga.init({
+            inputStream: {
+                name: "Live",
+                type: "LiveStream",
+                target: document.querySelector('#scanner'),
+                constraints: {
+                    width: 640,
+                    height: 480,
+                    facingMode: "environment" // Use back camera
+                }
+            },
+            decoder: {
+                readers: [
+                    "ean_reader",
+                    "upc_reader",
+                    "code_128_reader",
+                    "ean_8_reader"
+                ],
+                multiple: false
+            },
+            locate: true,
+            locator: {
+                halfSample: true,
+                patchSize: "large"
+            },
+            numOfWorkers: 4,
+            frequency: 10
+        }, function (err) {
+            if (err) {
+                console.error(err);
+                return;
+            }
+            Quagga.start();
+            startNoBarcodeDetectionTimer();
+        });
+
+        Quagga.onDetected(function (data) {
+            const barcode = data.codeResult.code;
+            console.log("Barcode detected: " + barcode);
+            clearTimeout(alertTimeout);
+            Quagga.stop();
+
+            document.querySelector('input[name="barcode"]').value = barcode;
+            document.getElementById("barcode-form").submit(); // Submit the form
+        });
+
+        function startNoBarcodeDetectionTimer() {
+            alertTimeout = setTimeout(function () {
+                alert("No barcode detected! Please ensure the barcode is in the camera's view.");
+            }, 10000);
+        }
+    </script>
+</body>
+</html>

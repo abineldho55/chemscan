@@ -1,0 +1,213 @@
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Detail</title>
+    <link rel="stylesheet" href="{% static 'styles/main.css' %}">
+    <style>
+     <style>
+    /* General Styles */
+    body {
+
+        font-family: 'Arial', sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+
+    .container {
+        width: 50%;
+        Max-height:600px;
+        max-width: 500px; /* Medium-sized container */
+        margin:  auto;
+        text-align: center;
+    }
+
+    header {
+        background-color: #4caf50;
+        padding: 20px;
+        color: black;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+
+    }
+
+    h1 {
+        margin: 0;
+        font-size: 2.5rem;
+        letter-spacing: 1.5px;
+        text-align: center; /* Center heading */
+    }
+
+    /* Product Details Section */
+    .product-details {
+        margin:  auto;
+        text-align: center;
+    }
+
+    .product-info, .nutrition-facts {
+        background-color: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 500px; /* Set maximum width */
+        margin-bottom: 20px;
+        display: block; /* Ensure block-level alignment */
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .product-info img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 10px;
+        margin-top: 20px;
+    }
+
+    h2, h3 {
+        color: #333;
+        margin-bottom: 10px;
+        font-weight: 600;
+    }
+
+    p {
+        color: #555;
+        margin: 10px 0;
+        font-size: 1rem;
+    }
+
+    .product-info p {
+        font-size: 1.1rem;
+    }
+
+    .product-info strong {
+        color: #333;
+    }
+
+    .alert {
+        color: #f44336;
+        font-weight: bold;
+    }
+
+    /* Nutrition Facts Table */
+    .nutrition-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    .nutrition-table th, .nutrition-table td {
+        border: 1px solid #ddd;
+        padding: 12px;
+    }
+
+    .nutrition-table th {
+        background-color: #4caf50;
+        color: white;
+        text-align: left;
+    }
+
+    .nutrition-table td {
+        text-align: right;
+        color: #333;
+    }
+
+    /* Buttons */
+    .btn {
+        display: inline-block;
+        margin-top: 20px;
+        background-color: #4caf50;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 5px;
+        text-decoration: none;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn:hover {
+        background-color: #45a049;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .product-details {
+            display: block;
+            text-align: center;
+        }
+
+        .product-info, .nutrition-facts {
+            width: 100%;
+        }
+    }
+
+</style>
+</head>
+<body>
+<header>
+        <div class="container">
+
+        </div>
+</header>
+
+    <div class="container">
+        <div class="product-details">
+
+            {% if product %}
+                <div class="product-info">
+                    <h2>{{ product.common_name }}</h2>
+                    <p><strong>Barcode:</strong> {{ product.barcode }}</p>
+                    <p><strong>Brand:</strong> {{ product.brand }}</p>
+                    <p><strong>Quantity:</strong> {{ product.quantity }}</p>
+                    <p><strong>Health Rating:</strong> {{ product.health_rating }}</p>
+                    {% if product.image_url %}
+                        <img src="{{ product.image_url.url }}" alt="{{ product.common_name }}" class="product-image">
+                    {% endif %}
+                </div>
+
+                <div class="nutrition-facts">
+                    <h3>Nutrition Facts</h3>
+                    <table class="nutrition-table">
+                        <tr>
+                            <th>Nutrient</th>
+                            <th>Amount per 100g</th>
+                        </tr>
+                        <tr>
+                            <td>Energy (kcal)</td>
+                            <td>{{ nutrition_facts.energy_kcal }}</td>
+                        </tr>
+                        <tr>
+                            <td>Fat (g)</td>
+                            <td>{{ nutrition_facts.fat }}</td>
+                        </tr>
+                        <tr>
+                            <td>Saturated Fat (g)</td>
+                            <td>{{ nutrition_facts.saturated_fat }}</td>
+                        </tr>
+                        <tr>
+                            <td>Carbohydrates (g)</td>
+                            <td>{{ nutrition_facts.carbohydrates }}</td>
+                        </tr>
+                        <tr>
+                            <td>Sugars (g)</td>
+                            <td>{{ nutrition_facts.sugars }}</td>
+                        </tr>
+                        <tr>
+                            <td>Proteins (g)</td>
+                            <td>{{ nutrition_facts.proteins }}</td>
+                        </tr>
+                        <tr>
+                            <td>Salt (g)</td>
+                            <td>{{ nutrition_facts.salt }}</td>
+                        </tr>
+                    </table>
+                </div>
+            {% else %}
+                <p class="alert">Product not found. Please try again.</p>
+            {% endif %}
+        </div>
+
+        <a href="{% url 'home' %}" class="btn">Scan another product</a>
+    </div>
+</body>
+</html>

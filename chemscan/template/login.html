@@ -1,0 +1,63 @@
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Form</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i">
+    <link rel="stylesheet" href="{% static 'styles/main.css' %}">
+</head>
+<body>
+    <!-- main -->
+    <div class="main-w3layouts wrapper">
+        <h1>Login Form</h1>
+        <div class="main-agileinfo">
+            <div class="agileits-top">
+                <form method="post">
+                    {% csrf_token %}
+
+                    <!-- Username -->
+                    <div class="password-container">
+                        <label>Username:</label>
+                        {{ form.username }}
+                        {{ form.username.errors }}
+                    </div>
+
+                    <!-- Password -->
+                    <div class="password-container">
+                        <label for="id_password">Password:</label>
+                        {{ form.password }}
+                        {{ form.password.errors }}
+                        <i class="eye-icon" onclick="togglePasswordVisibility('id_password1')">👁️</i>
+                    </div>
+
+
+
+                    <input type="submit" value="LOGIN">
+                </form>
+                <p>Don't have an account? <a href="{% url 'signup' %}">Sign Up Now!</a></p>
+            </div>
+        </div>
+        <!-- copyright -->
+        <div class="colorlibcopy-agile">
+            <p> @chemScan Login Form. All rights reserved </p>
+        </div>
+        <!-- //copyright -->
+        <ul class="colorlib-bubbles">
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+        </ul>
+    </div>
+
+    <script src="{% static 'script/main.js' %}"></script>
+    <!-- //main -->
+</body>
+</html>
